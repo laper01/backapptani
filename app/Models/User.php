@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
+
+use function PHPUnit\Framework\returnSelf;
 
 class User extends Authenticatable
 {
@@ -42,4 +45,34 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    protected static function boot()
+    {
+      parent::boot();
+      static::creating(function ($model) {
+        if (!$model->getKey()) {
+          $model->{$model->getKeyName()} = (string) Str::uuid();
+        }
+      });
+    }
+
+    public function getIncrementing()
+    {
+      return false;
+    }
+
+    /**
+     * Get the auto-incrementing key type.
+     *
+     * @return string
+     */
+    public function getKeyType()
+    {
+      return 'string';
+    }
+
+    public function collector (){
+        return $this->hasOne( Collector::class, 'user_id', 'id');
+    }
+
+
 }

@@ -18,8 +18,8 @@ class CreateFruitCommoditiesTable extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('farmer_id');
             $table->foreign('farmer_id')->references('id')->on('farmers')->onDelete('cascade');
-            $table->foreignUuid('colector_id');
-            $table->foreign('colector_id')->references('id')->on('collectors')->onDelete('cascade');
+            $table->foreignUuid('collector_id');
+            $table->foreign('collector_id')->references('id')->on('collectors')->onDelete('cascade');
             $table->foreignUuid('fruit_id');
             $table->foreign('fruit_id')->references('id')->on('fruits')->onDelete('cascade');
             $table->date('blossoms_tree_date');

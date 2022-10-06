@@ -16,7 +16,8 @@ class CreateFarmerTransactionsTable extends Migration
         Schema::create('farmer_transactions', function (Blueprint $table) {
             // $table->id();
             $table->uuid('id')->primary();
-            $table->foreignUuid('fruit_comodity_id');
+            $table->foreignUuid('fruit_commodity_id');
+            $table->foreign('fruit_commodity_id')->references('id')->on('fruit_commodities')->onDelete('cascade');
             $table->float('weight');
             $table->integer("payment");
             $table->timestamps();
