@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\ResponseFormatter;
+use App\Models\Collector;
+use Collator;
 use Illuminate\Http\Response;
 
 class AuthController extends Controller
@@ -17,7 +19,7 @@ class AuthController extends Controller
             "name" => "required|string",
             "phone_number" => "required|string",
             "email" => "required|string|unique:users,email",
-            "password" => "required|string"
+            "password" => "required|string|confirmed"
         ]);
 
         $user = User::create([
@@ -26,6 +28,10 @@ class AuthController extends Controller
             'email' => $field['email'],
             'password' => bcrypt($field['password'])
         ]);
+
+        $collector = new Collector();
+        $collector->user_id = $user->id;
+        $collector->save();
 
         $token = $user->createToken("apptani")->plainTextToken;
         $response = [

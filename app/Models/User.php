@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\Sanctum;
+
 
 use function PHPUnit\Framework\returnSelf;
 
@@ -47,17 +49,17 @@ class User extends Authenticatable
     ];
     protected static function boot()
     {
-      parent::boot();
-      static::creating(function ($model) {
-        if (!$model->getKey()) {
-          $model->{$model->getKeyName()} = (string) Str::uuid();
-        }
-      });
+        parent::boot();
+        static::creating(function ($model) {
+            if (!$model->getKey()) {
+                $model->{$model->getKeyName()} = (string) Str::uuid();
+            }
+        });
     }
 
     public function getIncrementing()
     {
-      return false;
+        return false;
     }
 
     /**
@@ -67,12 +69,16 @@ class User extends Authenticatable
      */
     public function getKeyType()
     {
-      return 'string';
+        return 'string';
     }
 
-    public function collector (){
-        return $this->hasOne( Collector::class, 'user_id', 'id');
+    public function collector()
+    {
+        return $this->hasOne(Collector::class, 'user_id', 'id');
     }
 
-
+    public function tokens()
+    {
+        return $this->morphMany(Sanctum::$personalAccessTokenModel, 'tokenable', "tokenable_type", "tokenable_id");
+    }
 }

@@ -25,3 +25,20 @@ class ResponseFormatter
 		return response()->json(self::$response, self::$response['meta']['code']);
 	}
 }
+
+// return ResponseFormatter::response(true, [
+//     'message' => 'Berhasil verifikasi nomor hp',
+//     'user' => $user->load(['informasi_pendaftaran.prodi_pilihan.prodi', 'pembayaran'])
+// ], Response::HTTP_OK);
+// } catch (Exception $error) {
+// if (isset($error->validator)) {
+//     return ResponseFormatter::response(false, [
+//         'message' => 'Something went wrong',
+//         'error' => $error->validator->getMessageBag(),
+//     ], $error->status);
+// }
+// return ResponseFormatter::response(false, [
+//     'message' => 'Something went wrong',
+//     'error' => $error,
+// ], 500);
+// }
