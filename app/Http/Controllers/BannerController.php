@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Banner;
 use Illuminate\Http\Request;
+use Exception;
+use App\Helpers\ResponseFormatter;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
@@ -15,6 +19,18 @@ class BannerController extends Controller
     public function index()
     {
         //
+        try {
+            $banner = Banner::select('url')->latest()->get();
+            return ResponseFormatter::response(true, [
+                'message' => 'Success',
+                "banner" => $banner
+            ], Response::HTTP_OK);
+        } catch (Exception $error) {
+            return ResponseFormatter::response(false, [
+                'message' => 'Something went wrong',
+                'error' => $error,
+            ], 500);
+        }
     }
 
     /**
@@ -24,7 +40,25 @@ class BannerController extends Controller
      */
     public function create()
     {
-        //
+        try {
+
+
+
+            return ResponseFormatter::response(true, [
+                'message' => 'Login successful',
+            ], Response::HTTP_OK);
+        } catch (Exception $error) {
+            if (isset($error->validator)) {
+                return ResponseFormatter::response(false, [
+                    'message' => 'Something went wrong',
+                    'error' => $error->validator->getMessageBag(),
+                ], $error->status);
+            }
+            return ResponseFormatter::response(false, [
+                'message' => 'Something went wrong',
+                'error' => $error,
+            ], 500);
+        }
     }
 
     /**
@@ -36,6 +70,35 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         //
+        // try {
+            $request->validate([
+                "image" => "required|mimes:jpeg,jpg,bmp,png|max:8192"
+            ]);
+
+            $path = $request->file('image')->store('public/banner');
+            $url = Storage::url($path);
+
+            $banner = new Banner();
+            $banner->url = $url;
+            $banner->path = $path;
+            $banner->save();
+
+            return ResponseFormatter::response(true, [
+                'message' => 'Banner saved successful',
+                "url" => $url
+            ], Response::HTTP_OK);
+        // } catch (Exception $error) {
+        //     if (isset($error->validator)) {
+        //         return ResponseFormatter::response(false, [
+        //             'message' => 'Something went wrong',
+        //             'error' => $error->validator->getMessageBag(),
+        //         ], $error->status);
+        //     }
+        //     return ResponseFormatter::response(false, [
+        //         'message' => 'Something went wrong',
+        //         'error' => $error,
+        //     ], 500);
+        // }
     }
 
     /**
@@ -78,8 +141,14 @@ class BannerController extends Controller
      * @param  \App\Models\Banner  $banner
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Banner $banner)
+    public function destroy(Request $request)
     {
         //
+        if(Storage::exists($request->path)){
+            Storage::delete($request->path);
+            return response("success");
+        }
+
+        return response('false');
     }
 }
