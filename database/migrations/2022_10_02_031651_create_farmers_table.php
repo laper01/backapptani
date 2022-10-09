@@ -17,7 +17,7 @@ class CreateFarmersTable extends Migration
             // $table->id();
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->double('land_location');
+            $table->string('land_location');
             $table->integer('number_tree');
             $table->integer('estimation_production');
             $table->float('land_size');

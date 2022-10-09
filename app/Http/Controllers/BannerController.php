@@ -70,7 +70,7 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         //
-        // try {
+        try {
             $request->validate([
                 "image" => "required|mimes:jpeg,jpg,bmp,png|max:8192"
             ]);
@@ -87,18 +87,18 @@ class BannerController extends Controller
                 'message' => 'Banner saved successful',
                 "url" => $url
             ], Response::HTTP_OK);
-        // } catch (Exception $error) {
-        //     if (isset($error->validator)) {
-        //         return ResponseFormatter::response(false, [
-        //             'message' => 'Something went wrong',
-        //             'error' => $error->validator->getMessageBag(),
-        //         ], $error->status);
-        //     }
-        //     return ResponseFormatter::response(false, [
-        //         'message' => 'Something went wrong',
-        //         'error' => $error,
-        //     ], 500);
-        // }
+        } catch (Exception $error) {
+            if (isset($error->validator)) {
+                return ResponseFormatter::response(false, [
+                    'message' => 'Something went wrong',
+                    'error' => $error->validator->getMessageBag(),
+                ], $error->status);
+            }
+            return ResponseFormatter::response(false, [
+                'message' => 'Something went wrong',
+                'error' => $error,
+            ], 500);
+        }
     }
 
     /**
@@ -144,11 +144,16 @@ class BannerController extends Controller
     public function destroy(Request $request)
     {
         //
-        if(Storage::exists($request->path)){
+        if (Storage::exists($request->path)) {
+            $file = Banner::where('path', $request->path)->first();
+            $file->delete();
             Storage::delete($request->path);
-            return response("success");
+            return ResponseFormatter::response(true, [
+                'message' => 'Banner deleted successful',
+            ], Response::HTTP_OK);
         }
-
-        return response('false');
+        return ResponseFormatter::response(false, [
+            'message' => 'Something went wrong',
+        ], 500);
     }
 }

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\fruit;
 use Illuminate\Http\Request;
+use App\Helpers\ResponseFormatter;
+use Illuminate\Http\Response;
+use Exception;
 
 class FruitController extends Controller
 {
@@ -14,7 +17,18 @@ class FruitController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $fruits = fruit::latest()->get();
+            return ResponseFormatter::response(true, [
+                'message' => 'Success',
+                "fruits" => $fruits
+            ], Response::HTTP_OK);
+        } catch (Exception $error) {
+            return ResponseFormatter::response(false, [
+                'message' => 'Something went wrong',
+                'error' => $error,
+            ], 500);
+        }
     }
 
     /**

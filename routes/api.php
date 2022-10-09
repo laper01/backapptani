@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\FruitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,7 @@ use App\Http\Controllers\BannerController;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::get("not-login",[AuthController::class, 'no_access'])->name('login');
+Route::get("not-login", [AuthController::class, 'no_access'])->name('login');
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout',  [AuthController::class, 'logout']);
     Route::get('test-token', function () {
@@ -27,8 +28,13 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // banner
-    Route::get('banner-all',[BannerController::class, 'index']);
-    Route::post('banner-save',[BannerController::class, 'store']);
-    Route::delete('banner-delete',[BannerController::class, 'destroy']);
+});
+// collector
+Route::middleware('auth:sanctum')->prefix('collector')->group(function () {
+    Route::get('banner-all', [BannerController::class, 'index']);
+    Route::post('banner-save', [BannerController::class, 'store']);
+    Route::delete('banner-delete', [BannerController::class, 'destroy']);
 
+    // fruit
+    Route::get("fruit", [FruitController::class, "index"]);
 });
