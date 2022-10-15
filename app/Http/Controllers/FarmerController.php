@@ -103,9 +103,10 @@ class FarmerController extends Controller
      * @param  \App\Models\Farmer  $farmer
      * @return \Illuminate\Http\Response
      */
-    public function edit(Farmer $farmer)
+    public function edit($id, Request $request)
     {
         //
+
     }
 
     /**
@@ -115,9 +116,42 @@ class FarmerController extends Controller
      * @param  \App\Models\Farmer  $farmer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Farmer $farmer)
+    public function update($id, Request $request)
     {
         //
+        try {
+            $request->validate([
+                "name" => "required|string",
+                "land_location" => "required|string",
+                "number_tree" => "required|numeric",
+                "estimation_production" => "required|numeric",
+                "land_size" => "required|numeric",
+            ]);
+
+            $farmer = Farmer::find($id);
+            $farmer->name = $request->name;
+            $farmer->land_location = $request->land_location;
+            $farmer->estimation_production = $request->estimation_production;
+            $farmer->land_size = $request->land_size;
+            $farmer->number_tree = $request->number_tree;
+            $farmer->save();
+
+            return ResponseFormatter::response(true, [
+                'message' => 'Farmer edited successful',
+                'farmer'=>$farmer
+            ], Response::HTTP_OK);
+        } catch (Exception $error) {
+            if (isset($error->validator)) {
+                return ResponseFormatter::response(false, [
+                    'message' => 'Something went wrong',
+                    'error' => $error->validator->getMessageBag(),
+                ], $error->status);
+            }
+            return ResponseFormatter::response(false, [
+                'message' => 'Something went wrong',
+                'error' => $error,
+            ], 500);
+        }
     }
 
     /**
@@ -126,8 +160,20 @@ class FarmerController extends Controller
      * @param  \App\Models\Farmer  $farmer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Farmer $farmer)
+    public function destroy($id)
     {
-        //
+        try {
+            $farmer = Farmer::find($id);
+            $farmer->delete();
+            return ResponseFormatter::response(true, [
+                'message' => 'Farmer deleted successful',
+                'farmer'=>$farmer
+            ], Response::HTTP_OK);
+        } catch (Exception $error) {
+            return ResponseFormatter::response(false, [
+                'message' => 'Something went wrong',
+                'error' => $error,
+            ], 500);
+        }
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\FarmerController;
 use App\Http\Controllers\FruitController;
+use App\Models\Farmer;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +44,6 @@ Route::middleware('auth:sanctum')->prefix('collector')->group(function () {
     // pertani
     Route::get('farmer',[FarmerController::class, "index"]);
     Route::post('farmer',[FarmerController::class, "store"]);
+    Route::put("farmer/{id}", [FarmerController::class, "update"]);
+    Route::delete("farmer/{id}", [FarmerController::class, "destroy"]);
 });
