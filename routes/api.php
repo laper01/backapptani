@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\FarmerController;
 use App\Http\Controllers\FruitController;
 
 /*
@@ -27,14 +28,19 @@ Route::middleware('auth:sanctum')->group(function () {
         return response("success");
     });
 
-    // banner
+
 });
 // collector
 Route::middleware('auth:sanctum')->prefix('collector')->group(function () {
+    // banner
     Route::get('banner-all', [BannerController::class, 'index']);
     Route::post('banner-save', [BannerController::class, 'store']);
     Route::delete('banner-delete', [BannerController::class, 'destroy']);
 
     // fruit
     Route::get("fruit", [FruitController::class, "index"]);
+
+    // pertani
+    Route::get('farmer',[FarmerController::class, "index"]);
+    Route::post('farmer',[FarmerController::class, "store"]);
 });

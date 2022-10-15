@@ -18,19 +18,9 @@ class FarmerController extends Controller
     public function index()
     {
         //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
         try {
-
-            $farmer = Farmer::select('id', 'name')->with("fruit_commoditys:id.fruit:name")->latest()->get();
+            // $farmer = Farmer::select('id', 'name')->with("fruit_commoditys:id","fruit_commoditys.fruit:name")->latest()->get();
+            $farmer = Farmer::latest()->get();
             return ResponseFormatter::response(true, [
                 'message' => 'Success',
                 "farmer" => $farmer
@@ -41,6 +31,17 @@ class FarmerController extends Controller
                 'error' => $error,
             ], 500);
         }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+
     }
 
     /**
@@ -65,11 +66,11 @@ class FarmerController extends Controller
             $farmer->land_location = $request->land_location;
             $farmer->estimation_production = $request->estimation_production;
             $farmer->land_size = $request->land_size;
+            $farmer->number_tree = $request->number_tree;
             $farmer->save();
 
             return ResponseFormatter::response(true, [
                 'message' => 'Farmer saved successful',
-                "farmer" => $farmer,
             ], Response::HTTP_OK);
         } catch (Exception $error) {
             if (isset($error->validator)) {
