@@ -5,8 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\FarmerController;
+use App\Http\Controllers\FruitCommodityController;
 use App\Http\Controllers\FruitController;
-use App\Models\Farmer;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -46,4 +47,15 @@ Route::middleware('auth:sanctum')->prefix('collector')->group(function () {
     Route::post('farmer',[FarmerController::class, "store"]);
     Route::put("farmer/{id}", [FarmerController::class, "update"]);
     Route::delete("farmer/{id}", [FarmerController::class, "destroy"]);
+
+    // komoditas petaniget
+    Route::get('comodity', [FruitCommodityController::class, 'index']);
+    Route::get('comodity/detail/{id}', [FruitCommodityController::class, 'show']);
+    Route::post('comodity', [FruitCommodityController::class, 'store']);
+    Route::put('comodity/{id}', [FruitCommodityController::class, 'update']);
+    Route::delete('comodity/{id}', [FruitCommodityController::class, 'destroy']);
+    Route::put('comodity/{id}', [FruitCommodityController::class, 'valid']);
+
+    // transaksi petani
+
 });

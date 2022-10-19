@@ -22,13 +22,13 @@ class CreateFruitCommoditiesTable extends Migration
             $table->foreign('collector_id')->references('id')->on('collectors')->onDelete('cascade');
             $table->foreignUuid('fruit_id');
             $table->foreign('fruit_id')->references('id')->on('fruits')->onDelete('cascade');
-            $table->date('blossoms_tree_date');
+            $table->date('blossoms_tree_date')->nullable();
             $table->date('harvesting_date')->nullable();
-            $table->string('fruit_grade');
-            $table->boolean('verified');
-            $table->date('verfied_date');
-            $table->float('weight');
-            $table->integer("price_kg");
+            $table->string('fruit_grade')->nullable();
+            $table->boolean('verified')->nullable();
+            $table->date('verfied_date')->nullable();
+            $table->float('weight')->nullable();
+            $table->integer("price_kg")->nullable();
             $table->timestamps();
         });
     }
