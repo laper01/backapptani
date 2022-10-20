@@ -22,7 +22,7 @@ class FruitCommodityController extends Controller
     {
         //
         try {
-            $farmer = Farmer::select('id', 'name')->with("fruit_commoditys:id", "fruit_commoditys.fruit:name")->latest()->get();
+            $farmer = Farmer::select('id', 'name')->with(["fruit_commoditys.fruit"])->latest()->get();
             return ResponseFormatter::response(true, [
                 'message' => 'Success',
                 "farmer" => $farmer
@@ -55,7 +55,7 @@ class FruitCommodityController extends Controller
     {
         //
         $user = Auth::user()->load(["collector"]);
-        // dd($user);
+        // return response( $user->collector->id);
         try {
             $request->validate([
                 "farmer_id" => 'required',
@@ -65,7 +65,7 @@ class FruitCommodityController extends Controller
             $fruitCommodity = new FruitCommodity();
             $fruitCommodity->farmer_id = $request->farmer_id;
             $fruitCommodity->fruit_id = $request->fruit_id;
-            $fruitCommodity->collector_id = $user->collector->collector_id;
+            $fruitCommodity->collector_id = $user->collector->id;
             $fruitCommodity->save();
 
             return ResponseFormatter::response(true, [
@@ -96,10 +96,9 @@ class FruitCommodityController extends Controller
     {
         //
         try {
-
             $fruitCommodity =  FruitCommodity::find($id);
             return ResponseFormatter::response(true, [
-                'message' => 'Comodity updated successful',
+                'message' => 'Successful',
                 "comodity" => $fruitCommodity,
             ], Response::HTTP_OK);
         } catch (Exception $error) {
@@ -137,6 +136,7 @@ class FruitCommodityController extends Controller
                 "fruit_grade" => 'required',
                 "weight" => 'required',
             ]);
+
 
             $fruitCommodity =  FruitCommodity::find($id);
             $fruitCommodity->blossoms_tree_date = $request->blossoms_tree_date;

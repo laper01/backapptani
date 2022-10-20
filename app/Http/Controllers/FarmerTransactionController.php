@@ -15,6 +15,8 @@ class FarmerTransactionController extends Controller
     public function index()
     {
         //
+        $farmerTransaction = FarmerTransaction::find();
+
     }
 
     /**

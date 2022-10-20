@@ -54,8 +54,12 @@ Route::middleware('auth:sanctum')->prefix('collector')->group(function () {
     Route::post('comodity', [FruitCommodityController::class, 'store']);
     Route::put('comodity/{id}', [FruitCommodityController::class, 'update']);
     Route::delete('comodity/{id}', [FruitCommodityController::class, 'destroy']);
-    Route::put('comodity/{id}', [FruitCommodityController::class, 'valid']);
+    Route::put('comodity/verify/{id}', [FruitCommodityController::class, 'valid']);
 
     // transaksi petani
+    Route::prefix('transaksi')->group(function(){
+        // Route::get('/t', [])
+    });
+
 
 });
