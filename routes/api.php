@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\FarmerController;
+use App\Http\Controllers\FarmerTransactionController;
 use App\Http\Controllers\FruitCommodityController;
 use App\Http\Controllers\FruitController;
 
@@ -50,7 +51,7 @@ Route::middleware('auth:sanctum')->prefix('collector')->group(function () {
 
     // komoditas petaniget
     Route::get('comodity', [FruitCommodityController::class, 'index']);
-    Route::get('comodity/detail/{id}', [FruitCommodityController::class, 'show']);
+    Route::get('comodity/show/{id}', [FruitCommodityController::class, 'show']);
     Route::post('comodity', [FruitCommodityController::class, 'store']);
     Route::put('comodity/{id}', [FruitCommodityController::class, 'update']);
     Route::delete('comodity/{id}', [FruitCommodityController::class, 'destroy']);
@@ -58,7 +59,9 @@ Route::middleware('auth:sanctum')->prefix('collector')->group(function () {
 
     // transaksi petani
     Route::prefix('transaksi')->group(function(){
-        // Route::get('/t', [])
+        Route::get('/farmer', [FarmerTransactionController::class, 'index']);
+        Route::post('/farmer/show/{id}', [FarmerTransactionController::class, 'show']);
+        Route::post('/farmer', [FarmerTransactionController::class, 'store']);
     });
 
 

@@ -22,16 +22,16 @@ class FruitCommodityController extends Controller
     {
         //
         try {
-            $farmer = Farmer::select('id', 'name')->with(["fruit_commoditys.fruit"])->latest()->get();
+            $fruitCommodity = FruitCommodity::with(["farmer", "fruit"])->latest()->get();
             return ResponseFormatter::response(true, [
-                'message' => 'Success',
-                "farmer" => $farmer
-            ], Response::HTTP_OK);
+                // 'message' => 'Success',
+                "fruit_comodity" => $fruitCommodity
+            ], Response::HTTP_OK, "berhasil");
         } catch (Exception $error) {
             return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+                // 'message' => 'Something went wrong',
+                // 'error' => $error,
+            ], 500, "Ada yang salah");
         }
     }
 
@@ -68,21 +68,12 @@ class FruitCommodityController extends Controller
             $fruitCommodity->collector_id = $user->collector->id;
             $fruitCommodity->save();
 
-            return ResponseFormatter::response(true, [
-                'message' => 'Comodity saved successful',
-                // "user" => $user,
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Komoditas berhasil disimpan");
         } catch (Exception $error) {
             if (isset($error->validator)) {
-                return ResponseFormatter::response(false, [
-                    'message' => 'Something went wrong',
-                    'error' => $error->validator->getMessageBag(),
-                ], $error->status);
+                return ResponseFormatter::response(false, null, $error->status, $error->validator->getMessageBag(),);
             }
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 
@@ -98,14 +89,10 @@ class FruitCommodityController extends Controller
         try {
             $fruitCommodity =  FruitCommodity::find($id);
             return ResponseFormatter::response(true, [
-                'message' => 'Successful',
                 "comodity" => $fruitCommodity,
-            ], Response::HTTP_OK);
+            ], Response::HTTP_OK, "berhasil");
         } catch (Exception $error) {
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 
@@ -139,31 +126,28 @@ class FruitCommodityController extends Controller
 
 
             $fruitCommodity =  FruitCommodity::find($id);
+
+            if ($fruitCommodity->verified) {
+                return ResponseFormatter::response(false, null, 401, "Comoditas sudah diverifikasi");
+            }
+
             $fruitCommodity->blossoms_tree_date = $request->blossoms_tree_date;
             $fruitCommodity->harvesting_date = $request->harvesting_date;
             $fruitCommodity->fruit_grade = $request->fruit_grade;
             $fruitCommodity->weight = $request->weight;
             $fruitCommodity->save();
 
-            return ResponseFormatter::response(true, [
-                'message' => 'Comodity updated successful',
-                // "user" => $user,
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Komoditas berhasil diupdate");
         } catch (Exception $error) {
             if (isset($error->validator)) {
-                return ResponseFormatter::response(false, [
-                    'message' => 'Something went wrong',
-                    'error' => $error->validator->getMessageBag(),
-                ], $error->status);
+                return ResponseFormatter::response(false, null, $error->status, $error->validator->getMessageBag(),);
             }
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 
-    public function valid($id){
+    public function valid($id)
+    {
         try {
             $dt = Carbon::now();
 
@@ -171,9 +155,7 @@ class FruitCommodityController extends Controller
             $fruitCommodity->verified = true;
             $fruitCommodity->verfied_date = $dt->toDateString();
             $fruitCommodity->save();
-            return ResponseFormatter::response(true, [
-                'message' => 'Comodity validated successful',
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Komoditas berhasil divalidasi");
         } catch (Exception $error) {
             return ResponseFormatter::response(false, [
                 'message' => 'Something went wrong',
@@ -190,18 +172,15 @@ class FruitCommodityController extends Controller
      */
     public function destroy($id)
     {
-        //
         try {
             $fruitCommodity = FruitCommodity::find($id);
+            if ($fruitCommodity->verified) {
+                return ResponseFormatter::response(false, null, 401, "Comoditas sudah diverifikasi");
+            }
             $fruitCommodity->delete();
-            return ResponseFormatter::response(true, [
-                'message' => 'Comodity deleted successful',
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Komoditas berhasil dihapus");
         } catch (Exception $error) {
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 }

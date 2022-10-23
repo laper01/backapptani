@@ -49,12 +49,12 @@ class FruitCommodity extends Model
         return $this->belongsTo(fruit::class, 'fruit_id', 'id');
     }
 
-    public function fruit_commodity()
+    public function farmer_transaction()
     {
         return $this->hasMany(FarmerTransaction::class, 'fruit_commodity_id', 'id');
     }
 
-    public function farmer_transaction()
+    public function customer_transaction()
     {
         return $this->belongsTo(CustomerTransaction::class, "farmer_transaction_id", 'id');
     }

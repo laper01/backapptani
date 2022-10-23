@@ -22,14 +22,11 @@ class BannerController extends Controller
         try {
             $banner = Banner::select('url')->latest()->get();
             return ResponseFormatter::response(true, [
-                'message' => 'Success',
                 "banner" => $banner
-            ], Response::HTTP_OK);
+            ], Response::HTTP_OK, "Success");
         } catch (Exception $error) {
             return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            ], 500, "Ada yang salah");
         }
     }
 
@@ -50,13 +47,13 @@ class BannerController extends Controller
         } catch (Exception $error) {
             if (isset($error->validator)) {
                 return ResponseFormatter::response(false, [
-                    'message' => 'Something went wrong',
-                    'error' => $error->validator->getMessageBag(),
-                ], $error->status);
+                    // 'message' => 'Something went wrong',
+                    // 'error' =>
+                ], $error->status, $error->validator->getMessageBag());
             }
             return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
+                // 'message' => 'Something went wrong',
+                // 'error' => $error,
             ], 500);
         }
     }
@@ -83,21 +80,12 @@ class BannerController extends Controller
             $banner->path = $path;
             $banner->save();
 
-            return ResponseFormatter::response(true, [
-                'message' => 'Banner saved successful',
-                "url" => $url
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Banner  berhasil disimpan");
         } catch (Exception $error) {
             if (isset($error->validator)) {
-                return ResponseFormatter::response(false, [
-                    'message' => 'Something went wrong',
-                    'error' => $error->validator->getMessageBag(),
-                ], $error->status);
+                return ResponseFormatter::response(false, null, $error->status, $error->validator->getMessageBag());
             }
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 
@@ -148,12 +136,8 @@ class BannerController extends Controller
             $file = Banner::where('path', $request->path)->first();
             $file->delete();
             Storage::delete($request->path);
-            return ResponseFormatter::response(true, [
-                'message' => 'Banner deleted successful',
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Banner behasil dihapus");
         }
-        return ResponseFormatter::response(false, [
-            'message' => 'Something went wrong',
-        ], 500);
+        return ResponseFormatter::response(false, null, 500, "Ada yang salah");
     }
 }

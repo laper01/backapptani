@@ -20,14 +20,11 @@ class FruitController extends Controller
         try {
             $fruits = fruit::latest()->get();
             return ResponseFormatter::response(true, [
-                'message' => 'Success',
+                // 'message' => 'Success',
                 "fruits" => $fruits
-            ], Response::HTTP_OK);
+            ], Response::HTTP_OK, "Success");
         } catch (Exception $error) {
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 

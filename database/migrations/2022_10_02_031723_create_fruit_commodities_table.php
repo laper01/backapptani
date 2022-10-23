@@ -29,6 +29,7 @@ class CreateFruitCommoditiesTable extends Migration
             $table->date('verfied_date')->nullable();
             $table->float('weight')->nullable();
             $table->integer("price_kg")->nullable();
+            $table->float('weight_selled')->nullable();
             $table->timestamps();
         });
     }

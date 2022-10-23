@@ -38,21 +38,14 @@ class AuthController extends Controller
             $token = $user->createToken("apptani")->plainTextToken;
 
             return ResponseFormatter::response(true, [
-                'message' => 'Registration successful',
                 "user" => $user,
                 "token" => $token
-            ], Response::HTTP_OK);
+            ], Response::HTTP_OK, 'Registration successful');
         } catch (Exception $error) {
             if (isset($error->validator)) {
-                return ResponseFormatter::response(false, [
-                    'message' => 'Something went wrong',
-                    'error' => $error->validator->getMessageBag(),
-                ], $error->status);
+                return ResponseFormatter::response(false, null, $error->status,  $error->validator->getMessageBag());
             }
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 
@@ -60,14 +53,9 @@ class AuthController extends Controller
     {
         try {
             auth()->user()->tokens()->delete();
-            return ResponseFormatter::response(true, [
-                'message' => 'User logout',
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "User berhasil keluar");
         } catch (Exception $error) {
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
     // email password
@@ -84,35 +72,24 @@ class AuthController extends Controller
             $user = User::where('email', $field['email'])->first();
             // return response($user);
             if (!$user || !Hash::check($field['password'], $user->password)) {
-                return response([
-                    "message" => "bad credential"
-                ], 401);
+                return ResponseFormatter::response(false, null, 401,"Nama user atau password salah");
             }
 
             $token = $user->createToken("apptani")->plainTextToken;
 
             return ResponseFormatter::response(true, [
-                'message' => 'Login successful',
                 "user" => $user,
                 "token" => $token
-            ], Response::HTTP_OK);
+            ], Response::HTTP_OK, "Login berhasil");
         } catch (Exception $error) {
             if (isset($error->validator)) {
-                return ResponseFormatter::response(false, [
-                    'message' => 'Something went wrong',
-                    'error' => $error->validator->getMessageBag(),
-                ], $error->status);
+                return ResponseFormatter::response(false, null, $error->status, $error->validator->getMessageBag(),);
             }
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 
     public function no_access(){
-        return ResponseFormatter::response(false, [
-            'message' => 'No Access',
-        ], 403);
+        return ResponseFormatter::response(false, null, 403, "No access");
     }
 }

@@ -20,6 +20,8 @@ class CreateFarmerTransactionsTable extends Migration
             $table->foreign('fruit_commodity_id')->references('id')->on('fruit_commodities')->onDelete('cascade');
             $table->float('weight');
             $table->integer("payment");
+            $table->integer("price_kg")->nullable();
+            $table->float('weight_selled')->nullable();
             $table->timestamps();
         });
     }

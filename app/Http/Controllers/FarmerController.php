@@ -22,14 +22,14 @@ class FarmerController extends Controller
             // $farmer = Farmer::select('id', 'name')->with("fruit_commoditys:id","fruit_commoditys.fruit:name")->latest()->get();
             $farmer = Farmer::latest()->get();
             return ResponseFormatter::response(true, [
-                'message' => 'Success',
+                // 'message' => 'Success',
                 "farmer" => $farmer
-            ], Response::HTTP_OK);
+            ], Response::HTTP_OK, "Success");
         } catch (Exception $error) {
             return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+                // 'message' => 'Something went wrong',
+                // 'error' => $error,
+            ], 500, "Ada yang salah");
         }
     }
 
@@ -69,20 +69,12 @@ class FarmerController extends Controller
             $farmer->number_tree = $request->number_tree;
             $farmer->save();
 
-            return ResponseFormatter::response(true, [
-                'message' => 'Farmer saved successful',
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Petani berhasil disimpan");
         } catch (Exception $error) {
             if (isset($error->validator)) {
-                return ResponseFormatter::response(false, [
-                    'message' => 'Something went wrong',
-                    'error' => $error->validator->getMessageBag(),
-                ], $error->status);
+                return ResponseFormatter::response(false, null, $error->status,  $error->validator->getMessageBag());
             }
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 
@@ -137,20 +129,14 @@ class FarmerController extends Controller
             $farmer->save();
 
             return ResponseFormatter::response(true, [
-                'message' => 'Farmer edited successful',
+                // 'message' => 'Farmer edited successful',
                 'farmer'=>$farmer
-            ], Response::HTTP_OK);
+            ], Response::HTTP_OK, "Petani berhasil diedit");
         } catch (Exception $error) {
             if (isset($error->validator)) {
-                return ResponseFormatter::response(false, [
-                    'message' => 'Something went wrong',
-                    'error' => $error->validator->getMessageBag(),
-                ], $error->status);
+                return ResponseFormatter::response(false, null, $error->status, $error->validator->getMessageBag(),);
             }
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 
@@ -165,15 +151,9 @@ class FarmerController extends Controller
         try {
             $farmer = Farmer::find($id);
             $farmer->delete();
-            return ResponseFormatter::response(true, [
-                'message' => 'Farmer deleted successful',
-                'farmer'=>$farmer
-            ], Response::HTTP_OK);
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Petani berhasil dihapus");
         } catch (Exception $error) {
-            return ResponseFormatter::response(false, [
-                'message' => 'Something went wrong',
-                'error' => $error,
-            ], 500);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 }
