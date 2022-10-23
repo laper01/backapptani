@@ -35,6 +35,29 @@ class FruitCommodityController extends Controller
         }
     }
 
+
+    public function listVerifiedComodity()
+    {
+        try {
+            $fruitComodityQuery = FruitCommodity::query();
+
+            $fruitComodityQuery->where('verified', true);
+
+            $fruitComodity = $fruitComodityQuery->with(['farmer', "fruit"])->get();
+
+
+            return ResponseFormatter::response(true, [
+                // 'message' => 'Success',
+                "fruit_comodity" => $fruitComodity
+            ], Response::HTTP_OK, "Success");
+        } catch (Exception $error) {
+            return ResponseFormatter::response(false, [
+                // 'message' => 'Something went wrong',
+                // 'error' => $error,
+            ], 500, "Ada yang salah");
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *

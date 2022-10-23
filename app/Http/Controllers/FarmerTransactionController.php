@@ -22,15 +22,11 @@ class FarmerTransactionController extends Controller
     {
         //
         try {
-            $fruitComodity = FruitCommodity::query();
-
-            $fruitComodity->where('verified', true);
-
-            $fruitComodity->with(['farmer'])->get();
+            $farmerTransaction = FarmerTransaction::with(["fruit_commodity.farmer", "fruit_commodity.fruit"])->latest()->get();
 
             return ResponseFormatter::response(true, [
                 // 'message' => 'Success',
-                "fruit_comodity" => $fruitComodity
+                "farmer_transaction" => $farmerTransaction
             ], Response::HTTP_OK, "Success");
         } catch (Exception $error) {
             return ResponseFormatter::response(false, [
@@ -61,13 +57,17 @@ class FarmerTransactionController extends Controller
         //
         $request->validate([
             "fruit_comodity_id" => "required",
-            "wieght" => 'required',
+            "weight" => 'required',
             "price" => 'required',
             "price_total" => 'required',
         ]);
         DB::beginTransaction();
         try {
             $fruitComodity = FruitCommodity::find($request->fruit_comodity_id);
+
+            if (!$fruitComodity->verified) {
+                return ResponseFormatter::response(false, null, 401, "Comoditas sudah belum diverifikasi");
+            }
 
             if((floatval($request->weight)+$fruitComodity->weight_selled) > $fruitComodity->weight ){
                 return ResponseFormatter::response(false, null, 400, "Berat melebihi berat buah pada komoditas");
@@ -77,9 +77,10 @@ class FarmerTransactionController extends Controller
             $fruitComodity->save();
 
             $farmerTransaction = new FarmerTransaction();
-            $farmerTransaction->fruit_comodity_id = $request->fruit_comodity_id;
-            $farmerTransaction->wieght = $request->wieght;
-            $farmerTransaction->price = $request->price;
+            $farmerTransaction->fruit_commodity_id = $request->fruit_comodity_id;
+            $farmerTransaction->weight = $request->weight;
+            $farmerTransaction->price_kg = $request->price;
+            $farmerTransaction->payment = $request->price_total;
             $farmerTransaction->save();
 
             DB::commit();
@@ -89,7 +90,7 @@ class FarmerTransactionController extends Controller
             if (isset($error->validator)) {
                 return ResponseFormatter::response(false, null, $error->status, $error->validator->getMessageBag(),);
             }
-            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
+            return ResponseFormatter::response(false, null, 500, $error);
         }
     }
 
@@ -102,10 +103,10 @@ class FarmerTransactionController extends Controller
     public function show($id)
     {
             try {
-                $farmerTransaction = FarmerTransaction::find($id);
+                $farmerTransaction = FarmerTransaction::with(["fruit_commodity.farmer", "fruit_commodity.fruit"])->find($id);
                 return ResponseFormatter::response(true, [
                     "farmer_transaction" => $farmerTransaction
-                ], Response::HTTP_OK, "Transaksi petani berhasil dirubah");
+                ], Response::HTTP_OK, "Berhasil");
             } catch (Exception $error) {
                 return ResponseFormatter::response(false, null, 500, "Ada yang salah");
             }
