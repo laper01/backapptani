@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\CustomerTransactionController;
 use App\Http\Controllers\FarmerController;
 use App\Http\Controllers\FarmerTransactionController;
 use App\Http\Controllers\FruitCommodityController;
@@ -58,11 +59,16 @@ Route::middleware('auth:sanctum')->prefix('collector')->group(function () {
     Route::put('comodity/verify/{id}', [FruitCommodityController::class, 'valid']);
     Route::get('comodity/list/verified/', [FruitCommodityController::class, 'listVerifiedComodity']);
 
-    // transaksi petani
+
     Route::prefix('transaction')->group(function(){
+        // transaksi petani
         Route::get('/farmer', [FarmerTransactionController::class, 'index']);
         Route::get('/farmer/show/{id}', [FarmerTransactionController::class, 'show']);
         Route::post('/farmer', [FarmerTransactionController::class, 'store']);
+        //transaksi pelanggan
+        Route::get('/customer', [CustomerTransactionController::class, 'index']);
+        Route::get('/customer/show/{id}', [CustomerTransactionController::class, 'show']);
+        Route::post('/customer', [CustomerTransactionController::class, 'store']);
     });
 
 

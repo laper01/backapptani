@@ -44,6 +44,7 @@ class FarmerTransactionController extends Controller
     public function create()
     {
         //
+
     }
 
     /**
@@ -84,13 +85,13 @@ class FarmerTransactionController extends Controller
             $farmerTransaction->save();
 
             DB::commit();
-            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Behasil menambah Comoditas");
+            return ResponseFormatter::response(true, null, Response::HTTP_OK, "Behasil menambah transaksi petani");
         } catch (Exception $error) {
             DB::rollBack();
             if (isset($error->validator)) {
                 return ResponseFormatter::response(false, null, $error->status, $error->validator->getMessageBag(),);
             }
-            return ResponseFormatter::response(false, null, 500, $error);
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
     }
 

@@ -20,11 +20,14 @@ class CreateCustomerTransactionsTable extends Migration
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->foreignUuid('farmer_transaction_id');
             $table->foreign('farmer_transaction_id')->references('id')->on('farmer_transactions')->onDelete('cascade');
-            $table->string('phone_number');
             $table->date('shiping_date');
             $table->float('weight');
             $table->integer('total_payment');
             $table->string('struck_link');
+            $table->string('address');
+            $table->string("receiver_name");
+            $table->integer("shiping_payment");
+            $table->integer("price");
             $table->timestamps();
         });
     }
