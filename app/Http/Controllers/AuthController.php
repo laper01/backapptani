@@ -72,7 +72,7 @@ class AuthController extends Controller
             $user = User::where('email', $field['email'])->first();
             // return response($user);
             if (!$user || !Hash::check($field['password'], $user->password)) {
-                return ResponseFormatter::response(false, null, 401,"Nama user atau password salah");
+                return ResponseFormatter::response(false, null, 401,"email atau password salah");
             }
 
             $token = $user->createToken("apptani")->plainTextToken;
