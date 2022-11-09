@@ -118,7 +118,7 @@ class CustomerTransactionController extends Controller
         try {
             $farmerTransaction = CustomerTransaction::with(["farmer_transaction.fruit_commodity.farmer", "farmer_transaction.fruit_commodity.fruit", "customer"])->find($id);
             return ResponseFormatter::response(true, [
-                "farmer_transaction" => $farmerTransaction
+                "customer_transaction" => $farmerTransaction
             ], Response::HTTP_OK, "Berhasil");
         } catch (Exception $error) {
             return ResponseFormatter::response(false, null, 500, "Ada yang salah");

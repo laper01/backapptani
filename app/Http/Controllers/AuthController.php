@@ -40,7 +40,7 @@ class AuthController extends Controller
             return ResponseFormatter::response(true, [
                 "user" => $user,
                 "token" => $token
-            ], Response::HTTP_OK, 'Registration successful');
+            ], Response::HTTP_OK, 'Registrasi berhasil');
         } catch (Exception $error) {
             if (isset($error->validator)) {
                 return ResponseFormatter::response(false, null, $error->status,  $error->validator->getMessageBag());
