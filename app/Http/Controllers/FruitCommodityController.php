@@ -137,7 +137,7 @@ class FruitCommodityController extends Controller
      * @param  \App\Models\FruitCommodity  $fruitCommodity
      * @return \Illuminate\Http\Response
      */
-    public function update($id, Request $request,)
+    public function update($id, Request $request)
     {
         try {
             $request->validate([
