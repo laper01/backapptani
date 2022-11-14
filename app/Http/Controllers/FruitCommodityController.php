@@ -111,9 +111,12 @@ class FruitCommodityController extends Controller
         //
         try {
             $fruitCommodity =  FruitCommodity::find($id);
-            return ResponseFormatter::response(true, [
-                "comodity" => $fruitCommodity,
-            ], Response::HTTP_OK, "berhasil");
+            return ResponseFormatter::response(
+                true,
+                $fruitCommodity,
+                Response::HTTP_OK,
+                "berhasil"
+            );
         } catch (Exception $error) {
             return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }

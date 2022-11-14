@@ -21,10 +21,12 @@ class FarmerController extends Controller
         try {
             // $farmer = Farmer::select('id', 'name')->with("fruit_commoditys:id","fruit_commoditys.fruit:name")->latest()->get();
             $farmer = Farmer::latest()->get();
-            return ResponseFormatter::response(true, [
-                // 'message' => 'Success',
-                "farmer" => $farmer
-            ], Response::HTTP_OK, "Success");
+            return ResponseFormatter::response(
+                true,
+                $farmer,
+                Response::HTTP_OK,
+                "Success"
+            );
         } catch (Exception $error) {
             return ResponseFormatter::response(false, [
                 // 'message' => 'Something went wrong',
@@ -128,10 +130,12 @@ class FarmerController extends Controller
             $farmer->number_tree = $request->number_tree;
             $farmer->save();
 
-            return ResponseFormatter::response(true, [
-                // 'message' => 'Farmer edited successful',
-                'farmer'=>$farmer
-            ], Response::HTTP_OK, "Petani berhasil diedit");
+            return ResponseFormatter::response(
+                true,
+                $farmer,
+                Response::HTTP_OK,
+                "Petani berhasil diedit"
+            );
         } catch (Exception $error) {
             if (isset($error->validator)) {
                 return ResponseFormatter::response(false, null, $error->status, $error->validator->getMessageBag(),);

@@ -22,10 +22,12 @@ class CustomerTransactionController extends Controller
     {
         try {
             $customerTransaction = CustomerTransaction::with(["farmer_transaction.fruit_commodity.farmer", "farmer_transaction.fruit_commodity.fruit", "customer"])->latest()->get();
-            return ResponseFormatter::response(true, [
-                // 'message' => 'Success',
-                "customer_transaction" => $customerTransaction
-            ], Response::HTTP_OK, "Success");
+            return ResponseFormatter::response(
+                true,
+                $customerTransaction,
+                Response::HTTP_OK,
+                "Success"
+            );
         } catch (Exception $error) {
             return ResponseFormatter::response(false, [
                 // 'message' => 'Something went wrong',
@@ -62,13 +64,13 @@ class CustomerTransactionController extends Controller
                 "shiping_payment" => "required",
                 "total_payment" => 'required',
                 "shiping_date" => 'required',
-                "address"=> 'required',
+                "address" => 'required',
                 "receiver_name" => "required",
                 "phone_number" => "required|string",
             ]);
             $customer = Customer::where("phone_number", $request->phone_number)->first();
 
-            if($customer == null){
+            if ($customer == null) {
                 $customer = new Customer();
                 $customer->phone_number = $request->phone_number;
                 $customer->save();
@@ -76,7 +78,7 @@ class CustomerTransactionController extends Controller
 
             $farmerTransaction = FarmerTransaction::find($request->farmer_transaction_id);
 
-            if((floatval($request->weight)+$farmerTransaction->weight_selled) > $farmerTransaction->weight ){
+            if ((floatval($request->weight) + $farmerTransaction->weight_selled) > $farmerTransaction->weight) {
                 return ResponseFormatter::response(false, null, 400, "Berat melebihi berat buah yang disediakan");
             }
 
@@ -117,9 +119,12 @@ class CustomerTransactionController extends Controller
         //
         try {
             $farmerTransaction = CustomerTransaction::with(["farmer_transaction.fruit_commodity.farmer", "farmer_transaction.fruit_commodity.fruit", "customer"])->find($id);
-            return ResponseFormatter::response(true, [
-                "customer_transaction" => $farmerTransaction
-            ], Response::HTTP_OK, "Berhasil");
+            return ResponseFormatter::response(
+                true,
+                $farmerTransaction,
+                Response::HTTP_OK,
+                "Berhasil"
+            );
         } catch (Exception $error) {
             return ResponseFormatter::response(false, null, 500, "Ada yang salah");
         }
