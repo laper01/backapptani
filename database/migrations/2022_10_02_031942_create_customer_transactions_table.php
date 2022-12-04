@@ -23,7 +23,7 @@ class CreateCustomerTransactionsTable extends Migration
             $table->date('shiping_date');
             $table->float('weight');
             $table->integer('total_payment');
-            $table->string('struck_link');
+            $table->string('struck_link')->nullable();
             $table->string('address');
             $table->string("receiver_name");
             $table->integer("shiping_payment");

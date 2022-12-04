@@ -36,10 +36,10 @@ class AuthController extends Controller
             $collector->save();
 
             $token = $user->createToken("apptani")->plainTextToken;
+            $user->token = $token;
 
             return ResponseFormatter::response(true, [
-                "user" => $user,
-                "token" => $token
+                $user,
             ], Response::HTTP_OK, 'Registrasi berhasil');
         } catch (Exception $error) {
             if (isset($error->validator)) {
@@ -72,14 +72,13 @@ class AuthController extends Controller
             $user = User::where('email', $field['email'])->first();
             // return response($user);
             if (!$user || !Hash::check($field['password'], $user->password)) {
-                return ResponseFormatter::response(false, null, 401,"email atau password salah");
+                return ResponseFormatter::response(false, null, 401, "email atau password salah");
             }
-
             $token = $user->createToken("apptani")->plainTextToken;
+            $user->token = $token;
 
             return ResponseFormatter::response(true, [
-                "user" => $user,
-                "token" => $token
+                $user,
             ], Response::HTTP_OK, "Login berhasil");
         } catch (Exception $error) {
             if (isset($error->validator)) {
@@ -89,7 +88,8 @@ class AuthController extends Controller
         }
     }
 
-    public function no_access(){
+    public function no_access()
+    {
         return ResponseFormatter::response(false, null, 403, "No access");
     }
 }

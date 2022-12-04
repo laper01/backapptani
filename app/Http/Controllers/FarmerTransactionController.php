@@ -24,10 +24,12 @@ class FarmerTransactionController extends Controller
         try {
             $farmerTransaction = FarmerTransaction::with(["fruit_commodity.farmer", "fruit_commodity.fruit"])->latest()->get();
 
-            return ResponseFormatter::response(true, [
-                // 'message' => 'Success',
-                "farmer_transaction" => $farmerTransaction
-            ], Response::HTTP_OK, "Success");
+            return ResponseFormatter::response(
+                true,
+                $farmerTransaction,
+                Response::HTTP_OK,
+                "Success"
+            );
         } catch (Exception $error) {
             return ResponseFormatter::response(false, [
                 // 'message' => 'Something went wrong',
@@ -70,11 +72,11 @@ class FarmerTransactionController extends Controller
                 return ResponseFormatter::response(false, null, 401, "Comoditas sudah belum diverifikasi");
             }
 
-            if((floatval($request->weight)+$fruitComodity->weight_selled) > $fruitComodity->weight ){
+            if ((floatval($request->weight) + $fruitComodity->weight_selled) > $fruitComodity->weight) {
                 return ResponseFormatter::response(false, null, 400, "Berat melebihi berat buah pada komoditas");
             }
 
-            $fruitComodity->weight_selled = $request->wieght;
+            $fruitComodity->weight_selled = $fruitComodity->weight_selled + $request->weight;
             $fruitComodity->save();
 
             $farmerTransaction = new FarmerTransaction();
@@ -103,14 +105,17 @@ class FarmerTransactionController extends Controller
      */
     public function show($id)
     {
-            try {
-                $farmerTransaction = FarmerTransaction::with(["fruit_commodity.farmer", "fruit_commodity.fruit"])->find($id);
-                return ResponseFormatter::response(true, [
-                    "farmer_transaction" => $farmerTransaction
-                ], Response::HTTP_OK, "Berhasil");
-            } catch (Exception $error) {
-                return ResponseFormatter::response(false, null, 500, "Ada yang salah");
-            }
+        try {
+            $farmerTransaction = FarmerTransaction::with(["fruit_commodity.farmer", "fruit_commodity.fruit"])->find($id);
+            return ResponseFormatter::response(
+                true,
+                $farmerTransaction,
+                Response::HTTP_OK,
+                "Berhasil"
+            );
+        } catch (Exception $error) {
+            return ResponseFormatter::response(false, null, 500, "Ada yang salah");
+        }
     }
 
     /**

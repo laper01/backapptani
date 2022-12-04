@@ -17,6 +17,7 @@ class ResponseFormatter
 
 	public static function response($status = true, $data = null, $code = null, $message = null)
 	{
+        // error_log($data);
 		self::$response['meta']['status'] = $status ? 'success' : 'error';
 		self::$response['meta']['code'] = $code;
 		self::$response['meta']['message'] = $message;

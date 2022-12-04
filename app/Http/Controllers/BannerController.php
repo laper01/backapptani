@@ -21,12 +21,14 @@ class BannerController extends Controller
         //
         try {
             $banner = Banner::select('url')->latest()->get();
-            return ResponseFormatter::response(true, [
-                "banner" => $banner
-            ], Response::HTTP_OK, "Success");
+            return ResponseFormatter::response(
+                true,
+                $banner,
+                Response::HTTP_OK,
+                "Success"
+            );
         } catch (Exception $error) {
-            return ResponseFormatter::response(false, [
-            ], 500, "Ada yang salah");
+            return ResponseFormatter::response(false, [], 500, "Ada yang salah");
         }
     }
 
