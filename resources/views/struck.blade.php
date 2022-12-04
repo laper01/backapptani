@@ -23,7 +23,7 @@
     <div class="flex justify-center ">
       <div class="w-1/2 block p-6 rounded-lg shadow-lg bg-white max-w-sm">
         <p class="text-center font-medium text-2xl mt-8">Tanggal Pesanan</p>
-        <p class="text-center font-normal text-gray-400 text-sm mt-1">Senin, 08 Oktober 2022, 08:00 WITA</p>
+        <p class="text-center font-normal text-gray-400 text-sm mt-1"> {{ date('d F Y, h:i:s', strtotime($struck->created_at)) }}</p>
         <p class="text-center font-medium text-2xl mt-2">Detail Pesanan</p>
 
 
@@ -33,7 +33,7 @@
           </div>
           <div>
             <p class="font-normal text-base mt-2">
-              Manggis
+              {{ $struck->farmer_transaction->fruit_commodity->fruit->name }}
             </p>
           </div>
         </div>
@@ -44,7 +44,7 @@
           </div>
           <div>
             <p class="font-normal text-base mt-2">
-              Manggis
+              Rp. {{  number_format($struck->price, 0,",",".") }}
             </p>
           </div>
 
@@ -56,7 +56,7 @@
           </div>
           <div>
             <p class="font-normal text-base mt-2">
-              Manggis
+              {{ $struck->weight }} Kg
             </p>
           </div>
 
@@ -68,7 +68,7 @@
           </div>
           <div>
             <p class="font-normal text-base mt-2">
-              Manggis
+             Rp. {{ number_format($struck->shiping_payment,0,",",".") }}
             </p>
           </div>
 
@@ -80,7 +80,7 @@
           </div>
           <div>
             <p class="font-normal text-base mt-2">
-              Manggis
+              1
             </p>
           </div>
         </div>
@@ -92,7 +92,7 @@
           </div>
           <div>
             <p class="font-normal text-lg mt-2">
-              Manggis
+              Rp. {{ number_format(($struck->weight * $struck->price ) + $struck->shiping_payment, 0,",",".") }}
             </p>
           </div>
 
