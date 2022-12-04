@@ -82,7 +82,7 @@ class CustomerTransactionController extends Controller
                 return ResponseFormatter::response(false, null, 400, "Berat melebihi berat buah yang disediakan");
             }
 
-            $farmerTransaction->weight_selled = $request->weight;
+            $farmerTransaction->weight_selled =  $farmerTransaction->weight_selled + $request->weight;
             $farmerTransaction->save();
 
             $customerTransaction = new CustomerTransaction();
@@ -95,8 +95,13 @@ class CustomerTransactionController extends Controller
             $customerTransaction->address = $request->address;
             $customerTransaction->receiver_name = $request->receiver_name;
             $customerTransaction->shiping_payment = $request->shiping_payment;
+            // $customerTransaction->struck_link = "struck/{$customerTransaction->id}";
+            $customerTransaction->save();
+
+            $customerTransaction = CustomerTransaction::find($customerTransaction->id);
             $customerTransaction->struck_link = "struck/{$customerTransaction->id}";
             $customerTransaction->save();
+
             DB::commit();
             return ResponseFormatter::response(true, null, Response::HTTP_OK, "Behasil menambah transaksi customer");
         } catch (Exception $error) {

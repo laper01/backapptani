@@ -76,7 +76,7 @@ class FarmerTransactionController extends Controller
                 return ResponseFormatter::response(false, null, 400, "Berat melebihi berat buah pada komoditas");
             }
 
-            $fruitComodity->weight_selled = $request->wieght;
+            $fruitComodity->weight_selled = $fruitComodity->weight_selled + $request->weight;
             $fruitComodity->save();
 
             $farmerTransaction = new FarmerTransaction();
